@@ -16,6 +16,9 @@ Features:
 * Simple setup via cron
 * Basic scheduling to silence alerts
 
+Usage:
+
+$ deckard ./deckard.yml
 
 Setup:
 
