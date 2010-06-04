@@ -1,0 +1,26 @@
+defaults:
+  email_to: "my@email.com"
+  email_from: "some@email.com"
+  email_host: "localhost"
+  db_user:
+  db_password:
+  db_host: "localhost"
+  db_port: "5984"
+  on_call_db: "monitor_on_call"
+  on_call_doc: "on_call_person"
+  log_file:
+
+content_check:
+  retry_count: 1
+  db: "monitor_content_check"
+
+fo_check:
+  retry_count: 1
+  aws_key: "key"
+  aws_secret: "seekrat"
+  db: "monitor_fo_check"
+
+rep_check:
+  doc_behind_threshold: 5000
+  doc_ahead_threshold: -100
+  db: "monitor_rep_check"

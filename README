@@ -1,0 +1,82 @@
+deckard : http monitoring system
+
+deckard is a http check monitoring system built on top of CouchDB.
+
+license: apache 2
+
+Features:
+
+* Email and SMS based alerts (through email)
+* Designated on-call sms email address
+* Basic CouchDB replication latency alerts
+* Basic content check alerts
+* Content check alerts with EC2 elastic IP failover
+* All checks are defined in CouchDB (CRUD checks with ReST)
+* Alert priorities (log, email, SMS)
+* Simple setup via cron
+* Basic scheduling to silence alerts
+
+
+Setup:
+
+* Setup and configure all appropriate databases and alert documents.
+* Create a crontab entry
+
+$ crontab -e
+*/5 * * * * deckard /path/deckard.yml &> /dev/null
+
+
+Example documents:
+
+On Call document format:
+
+{
+   "_id": "on_call_person",
+   "sms_email": "8675309@jenny.net"
+}
+
+For sms_email you will need to put in the phone number and sms to email host for your phone provider.
+
+
+Failover check document format:
+
+{
+   "_id": "lb01",
+   "url": "http://somecheck.com/check.html",
+   "secondary_instance_id": "i-1234",
+   "priority": 2,
+   "elastic_ip": "127.0.0.1",
+   "content": "sometext",
+   "failover": true,
+   "primary_instance_id": "i-4321"
+}
+
+This document needs all the details to cause an elastic ip switch in the case the content is not found on the url.
+
+
+Replication check format:
+
+{
+   "_id": "node01_node02",
+	 "name": "test",
+	 "master_url": "http://node01:5984/db",
+	 "slave_url": "http://node02:5984/db"
+	 "offset": 0, 
+	 "priority": 2,
+	 "schedule": [])
+}
+
+This will test the doc counts between two databases and if they become out of sync by more or less than the thresholds specified in the config an alert is triggered.
+
+
+HTTP content check format:
+
+{
+   "_id": "deckard.com:5984/",
+   "url": "http://deckard.com:5984/",
+   "content": "couchdb",
+   "priority": 2
+}
+
+
+For all of these priority and schedule are optional fields in these documents, priority is 0, 1 and 2. 0 is log only, 1 is log and email and 2 is log, email and sms. The schedule is an array containing integers for the hours the alert should be silent.
