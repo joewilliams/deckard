@@ -61,12 +61,15 @@ Replication check format:
 
 {
    "_id": "node01_node02",
-	 "name": "test",
-	 "master_url": "http://node01:5984/db",
-	 "slave_url": "http://node02:5984/db"
-	 "offset": 0, 
-	 "priority": 2,
-	 "schedule": [])
+   "name": "test",
+   "master_url": "http://node01/db",
+   "slave_url": "http://node02/db",
+   "offset": 0,
+   "priority": 1,
+   "schedule": [
+       2,
+       3
+   ]
 }
 
 This will test the doc counts between two databases and if they become out of sync by more or less than the thresholds specified in the config an alert is triggered.
@@ -82,4 +85,4 @@ HTTP content check format:
 }
 
 
-For all of these priority and schedule are optional fields in these documents, priority is 0, 1 and 2. 0 is log only, 1 is log and email and 2 is log, email and sms. The schedule is an array containing integers for the hours the alert should be silent.
+For all of these priority and schedule are optional fields in these documents, priority is 0, 1 and 2. 0 is log only, 1 is log and email and 2 is log, email and sms. The schedule is an array containing integers for the hours the alert should be silent. Check out the replication check definition above.
