@@ -32,7 +32,7 @@ class Deckard
       node_list
     end
 
-    def self.alert(priority, subject, body, log, schedule)
+    def self.alert(priority, subject, body, log, schedule, url)
       email_to = Deckard::Config.email_to
       on_call_contacts = on_call()
 
@@ -51,7 +51,7 @@ class Deckard
         begin
           if on_call_contacts.has_key?("notifo_username")
             Deckard::Log.info("sending notifo alert to #{on_call_contacts["notifo_username"]}")
-            send_notifo(on_call_contacts["notifo_username"], subject)
+            send_notifo(on_call_contacts["notifo_username"], subject, url)
             Deckard::Log.info(log)
           else
             Deckard::Log.info("sending email alert to #{email_to} and sms to #{on_call_contacts["sms_email"]}")
@@ -104,9 +104,9 @@ class Deckard
       end
     end
 
-    def self.send_notifo(username, subject)
+    def self.send_notifo(username, subject, url)
       notifo = Notifo.new(Deckard::Config.notifo_user, Deckard::Config.notifo_apikey)
-      response = notifo.post(username, subject)
+      response = notifo.post(username, subject, "deckard alert", url)
       Deckard::Log.info("Notifo response: #{response}")
     end
     
