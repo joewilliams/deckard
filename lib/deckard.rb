@@ -10,6 +10,7 @@ require 'right_aws'
 require 'mixlib/log'
 require 'mixlib/config'
 require 'yaml'
+require 'notifo'
 
 __DIR__ = File.dirname(__FILE__)
 
@@ -25,6 +26,7 @@ require 'deckard/util'
 
 
 class Deckard
+  
   def self.content_check
     retry_count = Deckard::Config.content_check_retry
     db_name = Deckard::Config.content_check_db

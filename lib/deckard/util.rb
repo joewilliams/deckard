@@ -34,7 +34,7 @@ class Deckard
 
     def self.alert(priority, subject, body, log, schedule)
       email_to = Deckard::Config.email_to
-      sms_email = on_call
+      on_call_contacts = on_call()
 
       # if scheduled maintenance set to logging only
       if schedule(schedule) == true
@@ -48,10 +48,23 @@ class Deckard
         send_email(email_to, subject, body)
         Deckard::Log.info(log)
       elsif priority == 2
-        Deckard::Log.info("sending email alert to #{email_to} and sms to #{sms_email}")
-        send_email(email_to, subject, body)
-        Deckard::Log.info(log)
-        send_email("#{sms_email}", subject, body)
+        begin
+          if on_call_contacts.has_key?("notifo_username")
+            Deckard::Log.info("sending notifo alert to #{on_call_contacts["notifo_username"]}")
+            send_notifo(on_call_contacts["notifo_username"], subject)
+            Deckard::Log.info(log)
+          else
+            Deckard::Log.info("sending email alert to #{email_to} and sms to #{on_call_contacts["sms_email"]}")
+            send_email(email_to, subject, body)
+            Deckard::Log.info(log)
+            send_email("#{on_call_contacts["sms_email"]}", subject, body)
+          end
+        rescue
+          Deckard::Log.info("sending email alert to #{email_to} and sms to #{on_call_contacts["sms_email"]}")
+          send_email(email_to, subject, body)
+          Deckard::Log.info(log)
+          send_email("#{on_call_contacts["sms_email"]}", subject, body)
+        end
       end
     end
 
@@ -65,9 +78,9 @@ class Deckard
 
       doc_url = "http://#{db_user}:#{db_password}@#{db_host}:#{db_port}/#{db_name}/#{doc_name}"
 
-      on_call = RestClient.get doc_url
-      on_call_json = JSON.parse(on_call)
-      on_call_json["sms_email"]
+      on_call_json = RestClient.get doc_url
+      on_call = JSON.parse(on_call_json)
+      on_call
     end
 
     def self.send_email(email_addr, subject, body)
@@ -91,6 +104,12 @@ class Deckard
       end
     end
 
+    def self.send_notifo(username, subject)
+      notifo = Notifo.new(Deckard::Config.notifo_user, Deckard::Config.notifo_apikey)
+      response = notifo.post(username, subject)
+      Deckard::Log.info("Notifo response: #{response}")
+    end
+    
     def self.schedule(schedule)
       if schedule.nil?
         false

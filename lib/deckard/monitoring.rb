@@ -19,7 +19,7 @@ class Deckard
         end
       else
         retries = 1
-        if result.include? content
+        if result.include?(content)
           Deckard::Log.info("PASS :: Found text \"#{content}\" on #{url}")
         else
           subject = "ALERT :: Check Content Failed on #{url}"
@@ -90,7 +90,8 @@ class Deckard
           end
         rescue Exception => e
           error = "ALERT :: Could not a failover #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id}!!"
-          log = "ALERT :: Could not a failover #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id}!! Due to #{e}"
+          log = "ALERT :: Could not a failover #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id}!!"
+          Deckard::Log.error(e)
           Deckard::Util.alert(priority, error, error, log, schedule)
         end
       else

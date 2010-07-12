@@ -25,6 +25,9 @@ class Deckard
       c[:doc_behind_threshold] = monitor_config["rep_check"]["doc_behind_threshold"]
       c[:doc_ahead_threshold] = monitor_config["rep_check"]["doc_ahead_threshold"]
       c[:rep_check_db] = monitor_config["rep_check"]["db"]
+      
+      c[:notifo_user] = monitor_config["notifo"]["user"]
+      c[:notifo_apikey] = monitor_config["notifo"]["apikey"]
     end
   end
 end

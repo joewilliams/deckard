@@ -24,3 +24,7 @@ rep_check:
   doc_behind_threshold: 5000
   doc_ahead_threshold: -100
   db: "monitor_rep_check"
+
+notifo:
+  user: "username"
+  apikey: "password"
