@@ -36,10 +36,10 @@ On Call document format:
 {
    "_id": "on_call_person",
    "sms_email": "8675309@jenny.net"
-   "notifo_username" : "jenny"
+   "notifo_usernames" : ["jenny"]
 }
 
-For sms_email you will need to put in the phone number and sms to email host for your phone provider. Provide both an sms email and notifo username and the sms will be only used for backup if something should go wrong with notifo. Saves you money on your text message bill! *You need the notifo application on your phone to use the notifo support.
+For sms_email you will need to put in the phone number and sms to email host for your phone provider. Provide both an sms email and notifo username(s) and the sms will be only used for backup if something should go wrong with notifo. Saves you money on your text message bill! *You need the notifo application on your phone to use the notifo support. Note that notifo_usernames is an array of usernames so multiple people can get notifications.
 
 
 Failover check document format:
