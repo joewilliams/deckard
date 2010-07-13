@@ -49,9 +49,9 @@ class Deckard
         Deckard::Log.info(log)
       elsif priority == 2
         begin
-          if on_call_contacts.has_key?("notifo_username")
-            Deckard::Log.info("sending notifo alert to #{on_call_contacts["notifo_username"]}")
-            send_notifo(on_call_contacts["notifo_username"], subject, url)
+          if on_call_contacts.has_key?("notifo_usernames")
+            Deckard::Log.info("sending notifo alert to #{on_call_contacts["notifo_usernames"]}")
+            send_notifo(on_call_contacts["notifo_usernames"], subject, url)
             Deckard::Log.info(log)
           else
             Deckard::Log.info("sending email alert to #{email_to} and sms to #{on_call_contacts["sms_email"]}")
@@ -104,10 +104,12 @@ class Deckard
       end
     end
 
-    def self.send_notifo(username, subject, url)
+    def self.send_notifo(usernames, subject, url)
       notifo = Notifo.new(Deckard::Config.notifo_user, Deckard::Config.notifo_apikey)
-      response = notifo.post(username, subject, "deckard alert", url)
-      Deckard::Log.info("Notifo response: #{response}")
+      usernames.each do |username|
+        response = notifo.post(username, subject, "deckard alert", url)
+        Deckard::Log.info("Notifo response: #{response}")
+      end
     end
     
     def self.schedule(schedule)
