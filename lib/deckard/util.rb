@@ -44,25 +44,25 @@ class Deckard
       if priority == 0
         Deckard::Log.info(log)
       elsif priority == 1
+        Deckard::Log.info(log)
         Deckard::Log.info("sending email alert to #{email_to}")
         send_email(email_to, subject, body)
-        Deckard::Log.info(log)
       elsif priority == 2
+        Deckard::Log.info(log)
+        Deckard::Log.info("sending email alert to #{email_to}")
+        send_email(email_to, subject, body)
         begin
           if on_call_contacts.has_key?("notifo_usernames")
             Deckard::Log.info("sending notifo alert to #{on_call_contacts["notifo_usernames"]}")
             send_notifo(on_call_contacts["notifo_usernames"], subject, url)
-            Deckard::Log.info(log)
           else
             Deckard::Log.info("sending email alert to #{email_to} and sms to #{on_call_contacts["sms_email"]}")
             send_email(email_to, subject, body)
-            Deckard::Log.info(log)
             send_email("#{on_call_contacts["sms_email"]}", subject, body)
           end
         rescue
           Deckard::Log.info("sending email alert to #{email_to} and sms to #{on_call_contacts["sms_email"]}")
           send_email(email_to, subject, body)
-          Deckard::Log.info(log)
           send_email("#{on_call_contacts["sms_email"]}", subject, body)
         end
       end
