@@ -15,6 +15,7 @@ class Deckard
       c[:log_file] = monitor_config["defaults"]["log_file"]
 
       c[:content_check_retry] = monitor_config["content_check"]["retry_count"]
+      c[:content_check_retry_interval] = monitor_config["content_check"]["retry_interval"]
       c[:content_check_db] = monitor_config["content_check"]["db"]
 
       c[:fo_check_retry] = monitor_config["fo_check"]["retry_count"]

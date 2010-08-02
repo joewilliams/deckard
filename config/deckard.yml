@@ -12,6 +12,7 @@ defaults:
 
 content_check:
   retry_count: 1
+  retry_interval: 5
   db: "monitor_content_check"
 
 fo_check:
