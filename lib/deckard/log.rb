@@ -6,5 +6,6 @@ class Deckard
     if log_file
       Deckard::Log.init(log_file)
     end
+    Deckard::Log.level(:info)
   end
 end

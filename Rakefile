@@ -4,7 +4,7 @@ require 'rake/rdoctask'
 
 spec = Gem::Specification.new do |s|
   s.name = "deckard"
-  s.version = "0.5.3"
+  s.version = "0.5.4"
   s.author = "joe williams"
   s.email = "joe@joetify.com"
   s.homepage = "http://github.com/joewilliams/deckard"
