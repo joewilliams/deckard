@@ -6,13 +6,13 @@ class Deckard
       begin
         retries = 1 unless retries
         result = RestClient.get(url)
-      rescue
+      rescue Exception => e
         Deckard::Log.info("ALERT :: Could not connect to #{url}, retrying ...")
         sleep(Deckard::Config.content_check_retry_interval)
         retry if (retries += 1) < retry_count
         if retries >= retry_count
           subject = "ALERT :: Check Content Failed on #{url}"
-          body = "Could not connect to #{url}"
+          body = "#{e} :: #{url}"
           log = subject + " -- " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, url)
           check = false
