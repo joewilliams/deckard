@@ -12,7 +12,7 @@ class Deckard
         retry if (retries += 1) < retry_count
         if retries >= retry_count
           subject = "ALERT :: Check Content Failed on #{url}"
-          body = "#{e} :: #{url}"
+          body = "#{Time.now} :: #{e} :: #{url}"
           log = subject + " -- " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, url)
           check = false
@@ -23,7 +23,7 @@ class Deckard
           Deckard::Log.info("PASS :: Found text \"#{content}\" on #{url}")
         else
           subject = "ALERT :: Check Content Failed on #{url}"
-          body = "Could not find text \"#{content}\" at #{url}"
+          body = "#{Time.now} :: Could not find text \"#{content}\" at #{url}"
           log = subject + " -- " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, url)
           check = false
