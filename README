@@ -49,6 +49,7 @@ Failover check document format:
    "url": "http://somecheck.com/check.html",
    "secondary_instance_id": "i-1234",
    "priority": 2,
+   "region": "us-east-1",
    "elastic_ip": "127.0.0.1",
    "content": "sometext",
    "failover": true,
