@@ -8,12 +8,12 @@ class Deckard
 
     def self.associate_address(region, instance_id, elastic_ip)
 			ec2 = ec2init(region)
-      ec2.associate_address(instance_id, elastic_ip)
+      ec2.associate_address(instance_id, elastic_ip).body["return"]
     end
 
     def self.disassociate_address(region, elastic_ip)
       ec2 = ec2init(region)
-      ec2.disassociate_address(elastic_ip)
+      ec2.disassociate_address(elastic_ip).body["return"]
     end
 
     def self.ec2init(region)
