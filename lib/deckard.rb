@@ -75,7 +75,7 @@ class Deckard
       run = Thread.new {
         check = Deckard::Monitor.content_check(node["url"], node["content"], node["priority"], retry_count, node["schedule"])
         unless check
-          Deckard::Monitor.failover(node["elastic_ip"], node["primary_instance_id"], node["secondary_instance_id"], node["priority"], node["schedule"], node["failover"])
+          Deckard::Monitor.failover(node["elastic_ip"], node["primary_instance_id"], node["secondary_instance_id"], node["priority"], node["schedule"], node["failover"], node["region"])
           Deckard::Util.flip_failover(node)
         end
         }
