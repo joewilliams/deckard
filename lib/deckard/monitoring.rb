@@ -57,7 +57,7 @@ class Deckard
       end
     end
 
-    def self.failover(elastic_ip, primary_instance_id, secondary_instance_id, priority, schedule, failover)
+    def self.failover(elastic_ip, primary_instance_id, secondary_instance_id, priority, schedule, failover, region)
       if failover
         begin
           subject = "ALERT :: #{elastic_ip} attempting failover!"
@@ -65,24 +65,41 @@ class Deckard
           log = subject + " " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, "http://#{elastic_ip}")
 
-          instance_id = Deckard::Ec2.get_association(elastic_ip)
-          Deckard::Ec2.disassociate_address(elastic_ip)
-          Deckard::Log.info("ALERT :: Disassociated #{elastic_ip}")
+          instance_id = Deckard::Ec2.get_association(region, elastic_ip)
+          
+ 					if Deckard::Ec2.disassociate_address(region, elastic_ip) == "true"
+          	Deckard::Log.info("ALERT :: Disassociated #{elastic_ip}")
+ 					else
+ 				    Deckard::Log.info("ALERT :: Could not disassociate #{elastic_ip}")
+         		Deckard::Util.alert(priority, "ALERT :: Could not disassociate #{elastic_ip}", "ALERT :: Could not disassociate #{elastic_ip}", log, schedule, "http://#{elastic_ip}")	
+					end
 
           if instance_id == primary_instance_id
-            Deckard::Ec2.associate_address(secondary_instance_id, elastic_ip)
+            if Deckard::Ec2.associate_address(region, secondary_instance_id, elastic_ip) == "true"
+							info = "ALERT :: associated #{elastic_ip} to #{secondary_instance_id}"
+            	Deckard::Log.info("ALERT :: associated #{elastic_ip} to #{secondary_instance_id}")
+            	subject = "ALERT :: Failover Complete for #{elastic_ip} #{secondary_instance_id}"
+            	body = "VERIFY THINGS ARE WORKING! #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id}"
+            	Deckard::Util.alert(priority, subject, body, subject, schedule, "http://#{elastic_ip}")							
+            else
+							info = "ALERT :: Could not associate #{elastic_ip}"
+ 				    	Deckard::Log.info(info)
+         			Deckard::Util.alert(priority, info, info, log, schedule, "http://#{elastic_ip}")							
+						end
 
-            Deckard::Log.info("ALERT :: associated #{elastic_ip} to #{secondary_instance_id}")
-            subject = "ALERT :: Failover Complete for #{elastic_ip} #{secondary_instance_id}"
-            body = "VERIFY THINGS ARE WORKING! #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id}"
-            Deckard::Util.alert(priority, subject, body, subject, schedule, "http://#{elastic_ip}")
           elsif instance_id == secondary_instance_id
-            Deckard::Ec2.associate_address(primary_instance_id, elastic_ip)
+            if Deckard::Ec2.associate_address(region, primary_instance_id, elastic_ip) == "true"
+							info = "ALERT :: associated #{elastic_ip} to #{secondary_instance_id}"
+            	Deckard::Log.info("ALERT :: associated #{elastic_ip} to #{secondary_instance_id}")
+            	subject = "ALERT :: Failover Complete for #{elastic_ip} #{secondary_instance_id}"
+            	body = "VERIFY THINGS ARE WORKING! #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id}"
+            	Deckard::Util.alert(priority, subject, body, subject, schedule, "http://#{elastic_ip}")							
+            else
+							info = "ALERT :: Could not associate #{elastic_ip}"
+ 				    	Deckard::Log.info(info)
+         			Deckard::Util.alert(priority, info, info, log, schedule, "http://#{elastic_ip}")							
+						end
 
-            Deckard::Log.info("ALERT :: associated #{elastic_ip} to #{primary_instance_id}")
-            subject = "ALERT :: Failover Complete for #{elastic_ip} #{primary_instance_id}"
-            body = "VERIFY THINGS ARE WORKING! #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id}"
-            Deckard::Util.alert(priority, subject, body, subject, schedule, "http://#{elastic_ip}")
           else
             error = "ALERT :: Could not a failover #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id}!!"
             log = "ALERT :: Could not a failover #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id}!! Due to instance_id != primary and secondary"
