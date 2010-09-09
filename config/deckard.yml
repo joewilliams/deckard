@@ -14,6 +14,8 @@ content_check:
   retry_count: 1
   retry_interval: 5
   db: "monitor_content_check"
+  delay: false
+  delay_upper_bound: 10
 
 fo_check:
   retry_count: 1

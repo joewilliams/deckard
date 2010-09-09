@@ -17,6 +17,8 @@ class Deckard
       c[:content_check_retry] = monitor_config["content_check"]["retry_count"]
       c[:content_check_retry_interval] = monitor_config["content_check"]["retry_interval"]
       c[:content_check_db] = monitor_config["content_check"]["db"]
+      c[:content_check_delay] = monitor_config["content_check"]["delay"]
+      c[:content_check_delay_upper_bound] = monitor_config["content_check"]["delay_upper_bound"]
 
       c[:fo_check_retry] = monitor_config["fo_check"]["retry_count"]
       c[:aws_key] = monitor_config["fo_check"]["aws_key"]

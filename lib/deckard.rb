@@ -30,6 +30,8 @@ class Deckard
   def self.content_check
     retry_count = Deckard::Config.content_check_retry
     db_name = Deckard::Config.content_check_db
+    delay = Deckard::Config.content_check_delay
+    upper_bound = Deckard::Config.content_check_delay_upper_bound
     list = Array.new
 
     nodes = Deckard::Util.get_nodes(db_name)
@@ -38,6 +40,9 @@ class Deckard
       run = Thread.new {
         Deckard::Monitor.content_check(node["url"], node["content"], node["priority"], retry_count, node["schedule"])
         }
+      if delay
+			  sleep(rand(upper_bound))
+      end 
       list << run
     end
 
