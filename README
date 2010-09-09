@@ -15,10 +15,13 @@ Features:
 * Alert priorities (log, email, SMS and notifo)
 * Simple setup via cron
 * Basic scheduling to silence alerts
+* Adjustable delay before firing check content requests
 
 Usage:
 
-$ deckard ./deckard.yml
+$ deckard --all ./deckard.yml
+
+You now have the option of running --all, --failover, --content, --replication if you only want to run a subset of checks
 
 Setup:
 
@@ -26,7 +29,7 @@ Setup:
 * Create a crontab entry
 
 $ crontab -e
-*/5 * * * * deckard /path/deckard.yml &> /dev/null
+*/5 * * * * deckard --all /path/deckard.yml &> /dev/null
 
 
 Example documents:

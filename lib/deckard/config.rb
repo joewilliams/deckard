@@ -1,6 +1,6 @@
 class Deckard
   class Config
-    monitor_config = YAML.load(File.open(ARGV[0]))
+    monitor_config = YAML.load(File.open(ARGV[1]))
     extend Mixlib::Config
     configure do |c|
       c[:email_to] = monitor_config["defaults"]["email_to"]

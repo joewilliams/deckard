@@ -95,9 +95,18 @@ class Deckard
   def self.main
     list = Array.new
 
-    list << Thread.new { content_check }
-    list << Thread.new { rep_check }
-    list << Thread.new { fo_check }
+    case ARGV[0]
+    when "--all"
+      list << Thread.new { content_check }
+      list << Thread.new { rep_check }
+      list << Thread.new { fo_check }
+    when "--content"
+      list << Thread.new { content_check }
+    when "--replication"
+      list << Thread.new { rep_check }
+    when "--failover"
+      list << Thread.new { fo_check }
+    end
 
     list.each { |x|
       x.join
