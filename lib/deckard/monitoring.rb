@@ -66,16 +66,17 @@ class Deckard
           Deckard::Util.alert(priority, subject, body, log, schedule, "http://#{elastic_ip}")
 
           instance_id = Deckard::Ec2.get_association(region, elastic_ip)
-          
- 					if Deckard::Ec2.disassociate_address(region, elastic_ip) == "true"
-          	Deckard::Log.info("ALERT :: Disassociated #{elastic_ip}")
- 					else
- 				    Deckard::Log.info("ALERT :: Could not disassociate #{elastic_ip}")
-         		Deckard::Util.alert(priority, "ALERT :: Could not disassociate #{elastic_ip}", "ALERT :: Could not disassociate #{elastic_ip}", log, schedule, "http://#{elastic_ip}")	
-					end
+
+          if Deckard::Ec2.disassociate_address(region, elastic_ip)
+            Deckard::Log.info("ALERT :: Disassociated #{elastic_ip}")
+          else
+            Deckard::Log.info("ALERT :: Could not disassociate #{elastic_ip}")
+            Deckard::Util.alert(priority, "ALERT :: Could not disassociate #{elastic_ip}", "ALERT :: Could not disassoci
+ate #{elastic_ip}", log, schedule, "http://#{elastic_ip}")
+          end
 
           if instance_id == primary_instance_id
-            if Deckard::Ec2.associate_address(region, secondary_instance_id, elastic_ip) == "true"
+            if Deckard::Ec2.associate_address(region, secondary_instance_id, elastic_ip)
 							info = "ALERT :: associated #{elastic_ip} to #{secondary_instance_id}"
             	Deckard::Log.info("ALERT :: associated #{elastic_ip} to #{secondary_instance_id}")
             	subject = "ALERT :: Failover Complete for #{elastic_ip} #{secondary_instance_id}"
@@ -88,7 +89,7 @@ class Deckard
 						end
 
           elsif instance_id == secondary_instance_id
-            if Deckard::Ec2.associate_address(region, primary_instance_id, elastic_ip) == "true"
+            if Deckard::Ec2.associate_address(region, primary_instance_id, elastic_ip)
 							info = "ALERT :: associated #{elastic_ip} to #{secondary_instance_id}"
             	Deckard::Log.info("ALERT :: associated #{elastic_ip} to #{secondary_instance_id}")
             	subject = "ALERT :: Failover Complete for #{elastic_ip} #{secondary_instance_id}"
