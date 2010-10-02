@@ -61,7 +61,7 @@ class Deckard
       if failover
         begin
           subject = "ALERT :: #{elastic_ip} attempting failover!"
-          body = "#{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id} attempting failover!"
+          body = "#{region} : #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id} attempting failover!"
           log = subject + " " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, "http://#{elastic_ip}")
 
@@ -72,7 +72,7 @@ class Deckard
           else
             Deckard::Log.info("ALERT :: Could not disassociate #{elastic_ip}")
             Deckard::Util.alert(priority, "ALERT :: Could not disassociate #{elastic_ip}", "ALERT :: Could not disassoci
-ate #{elastic_ip}", log, schedule, "http://#{elastic_ip}")
+ate #{elastic_ip} - #{region}", log, schedule, "http://#{elastic_ip}")
           end
 
           if instance_id == primary_instance_id
