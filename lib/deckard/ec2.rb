@@ -20,7 +20,7 @@ class Deckard
       aws_key = Deckard::Config.aws_key
       aws_secret = Deckard::Config.aws_secret
     	
-      Fog::AWS::EC2.new(
+      Fog::AWS::Compute.new(
       	:aws_access_key_id => aws_key,
       	:aws_secret_access_key => aws_secret,
       	:region => region)
