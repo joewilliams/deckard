@@ -41,6 +41,9 @@ class Deckard
       
       c[:stats_db] = monitor_config["stats"]["db"]
       
+      c[:chef_url] = monitor_config["chef"]["url"]
+      c[:chef_enabled] = monitor_config["chef"]["enabled"]
+      
     end
   end
 end

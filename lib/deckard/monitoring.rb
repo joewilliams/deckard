@@ -11,8 +11,17 @@ class Deckard
         sleep(Deckard::Config.content_check_retry_interval)
         retry if (retries += 1) < retry_count
         if retries >= retry_count
-          subject = "ALERT :: Check Content Failed on #{url} :: #{e}"
-          body = "#{Time.now} :: #{url} :: #{e}"
+          
+          node_info = Deckard::Chef.get_node_info(url)
+          
+          if node_info
+            subject = "ALERT :: #{node_info} :: #{e}"
+            body = "#{Time.now} :: #{url}"
+          else
+            subject = "ALERT :: #{url} :: #{e}"
+            body = "#{Time.now} :: #{url} :: #{e}"
+          end
+          
           log = subject + " -- " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, url)
           Deckard::Stats.alert(priority, e, url, "contentcheck")
@@ -23,8 +32,17 @@ class Deckard
         if result.include?(content)
           Deckard::Log.info("PASS :: Found text \"#{content}\" on #{url}")
         else
-          subject = "ALERT :: Check Content Failed on #{url}"
-          body = "#{Time.now} :: Could not find text \"#{content}\" at #{url}"
+          
+          node_info = Deckard::Chef.get_node_info(url)
+          
+          if node_info
+            subject = "ALERT :: #{node_info} :: content missing"
+            body = "#{Time.now} :: Could not find text \"#{content}\" at #{url}"
+          else
+            subject = "ALERT :: #{url} :: content missing"
+            body = "#{Time.now} :: Could not find text \"#{content}\" at #{url}"
+          end
+          
           log = subject + " -- " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, url)
           Deckard::Stats.alert(priority, "nocontent", url, "contentcheck")

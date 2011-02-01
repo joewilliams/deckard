@@ -34,3 +34,7 @@ notifo:
 
 stats:
   db: "monitor_stats"
+
+chef:
+  enabled: true
+  url:"http://localhost:5984/chef/_design/nodes/_view/hostnames"

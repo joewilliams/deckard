@@ -24,6 +24,7 @@ require 'deckard/ec2'
 require 'deckard/monitoring'
 require 'deckard/stats'
 require 'deckard/util'
+require 'deckard/chef'
 
 
 class Deckard

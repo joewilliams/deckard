@@ -16,6 +16,8 @@ Features:
 * Simple setup via cron
 * Basic scheduling to silence alerts
 * Adjustable delay before firing check content requests
+* Basic Chef "tag" lookup support
+* Alert stats database for trending and analysis
 
 Usage:
 
@@ -91,3 +93,12 @@ HTTP content check format:
 
 
 For all of these priority and schedule are optional fields in these documents, priority is 0, 1 and 2. 0 is log only, 1 is log and email and 2 is log, email and sms. The schedule is an array containing integers for the hours the alert should be silent. Check out the replication check definition above.
+
+
+For Chef "tag" support you need to install a view in your chef database and configure the url to it in your Deckard config file.
+
+function(doc) {
+    if (doc.chef_type != 'node') return;
+    
+    emit(doc.automatic.ec2 ? doc.automatic.ec2.public_hostname : doc.automatic.fqdn, doc.normal.tags[0]);
+}
