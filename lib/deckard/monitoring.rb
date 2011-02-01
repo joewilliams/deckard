@@ -11,8 +11,8 @@ class Deckard
         sleep(Deckard::Config.content_check_retry_interval)
         retry if (retries += 1) < retry_count
         if retries >= retry_count
-          subject = "ALERT :: Check Content Failed on #{url}"
-          body = "#{Time.now} :: #{e} :: #{url}"
+          subject = "ALERT :: Check Content Failed on #{url} :: #{e}"
+          body = "#{Time.now} :: #{url} :: #{e}"
           log = subject + " -- " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, url)
           Deckard::Stats.alert(priority, e, url, "contentcheck")
