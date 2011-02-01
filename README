@@ -102,3 +102,25 @@ function(doc) {
     
     emit(doc.automatic.ec2 ? doc.automatic.ec2.public_hostname : doc.automatic.fqdn, doc.normal.tags[0]);
 }
+
+
+Regarding alert stats, just create a stats database and puts it's name in the config file. When alerts happen you should begin to see documents get added. By itself it isn't all that helpful, analysis is the key. Here is a basic "counts" design document to get you started, it will give you stats about the different kinds of alerts you are having.
+
+{
+   "_id": "_design/counts",
+   "language": "javascript",
+   "views": {
+       "by_type": {
+           "map": "function(doc) {\n  emit(doc.type, 1);\n}",
+           "reduce": "_count"
+       },
+       "by_url": {
+           "map": "function(doc) {\n  emit(doc.url, 1);\n}",
+           "reduce": "_count"
+       },
+       "by_error": {
+           "map": "function(doc) {\n  emit(doc.error, 1);\n}",
+           "reduce": "_count"
+       }
+   }
+}
