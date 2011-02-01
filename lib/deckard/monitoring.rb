@@ -15,6 +15,7 @@ class Deckard
           body = "#{Time.now} :: #{e} :: #{url}"
           log = subject + " -- " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, url)
+          Deckard::Stats.alert(priority, e, url, "contentcheck")
           check = false
         end
       else
@@ -26,6 +27,7 @@ class Deckard
           body = "#{Time.now} :: Could not find text \"#{content}\" at #{url}"
           log = subject + " -- " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, url)
+          Deckard::Stats.alert(priority, "nocontent", url, "contentcheck")
           check = false
         end
       end
@@ -49,6 +51,7 @@ class Deckard
           body = "Master: #{master_url} => Slave: #{slave_url} : off by #{doc_count_diff}"
           log = subject + " -- " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, master_url)
+          Deckard::Stats.alert(priority, "#{doc_count_diff}", url, "replication")
         else
           Deckard::Log.info("PASS :: Replication for #{name} is OK (#{doc_count_diff})")
         end
@@ -64,7 +67,8 @@ class Deckard
           body = "#{region} : #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id} attempting failover!"
           log = subject + " " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, "http://#{elastic_ip}")
-
+          Deckard::Stats.alert(priority, "unknown", url, "failover")
+          
           instance_id = Deckard::Ec2.get_association(region, elastic_ip)
 
           if Deckard::Ec2.disassociate_address(region, elastic_ip)

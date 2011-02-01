@@ -22,6 +22,7 @@ require 'deckard/config'
 require 'deckard/log'
 require 'deckard/ec2'
 require 'deckard/monitoring'
+require 'deckard/stats'
 require 'deckard/util'
 
 

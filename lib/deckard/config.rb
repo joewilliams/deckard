@@ -1,6 +1,13 @@
 class Deckard
   class Config
-    monitor_config = YAML.load(File.open(ARGV[1]))
+
+    if ARGV[0]
+      monitor_config = YAML.load(File.open(ARGV[1]))
+    else
+      puts "No config file specified"
+      abort
+    end
+
     extend Mixlib::Config
     configure do |c|
       c[:email_to] = monitor_config["defaults"]["email_to"]
@@ -31,6 +38,9 @@ class Deckard
       
       c[:notifo_user] = monitor_config["notifo"]["user"]
       c[:notifo_apikey] = monitor_config["notifo"]["apikey"]
+      
+      c[:stats_db] = monitor_config["stats"]["db"]
+      
     end
   end
 end

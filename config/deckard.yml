@@ -31,3 +31,6 @@ rep_check:
 notifo:
   user: "username"
   apikey: "password"
+
+stats:
+  db: "monitor_stats"
