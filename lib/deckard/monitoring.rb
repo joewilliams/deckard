@@ -85,7 +85,7 @@ class Deckard
           body = "#{region} : #{elastic_ip} => #{primary_instance_id} / #{secondary_instance_id} attempting failover!"
           log = subject + " " + body
           Deckard::Util.alert(priority, subject, body, log, schedule, "http://#{elastic_ip}")
-          Deckard::Stats.alert(priority, "unknown", url, "failover")
+          Deckard::Stats.alert(priority, "unknown", "http://#{elastic_ip}", "failover")
           
           instance_id = Deckard::Ec2.get_association(region, elastic_ip)
 
